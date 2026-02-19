@@ -6,6 +6,11 @@ import { logoutCommand } from "./commands/logout/index.js";
 import { statusCommand } from "./commands/status/index.js";
 import { accountsCommand } from "./commands/accounts/index.js";
 import { transactionsCommand } from "./commands/transactions/index.js";
+import { recipientsCommand } from "./commands/recipients/index.js";
+import { cardsCommand } from "./commands/cards/index.js";
+import { statementsCommand } from "./commands/statements/index.js";
+import { webhooksCommand } from "./commands/webhooks/index.js";
+import { eventsCommand } from "./commands/events/index.js";
 import { versionCommand } from "./commands/version/index.js";
 
 const BIN = "mercury";
@@ -16,6 +21,11 @@ const commands: readonly Command[] = [
   statusCommand,
   accountsCommand,
   transactionsCommand,
+  recipientsCommand,
+  cardsCommand,
+  statementsCommand,
+  webhooksCommand,
+  eventsCommand,
   versionCommand,
 ];
 
@@ -45,6 +55,11 @@ function printHelp(): void {
     console.log(\`  \${command.name.padEnd(16)}\${command.description}\${aliasText}\`);
   }
 
+  console.log("");
+  console.log("Global options:");
+  console.log("  --json          Output as JSON");
+  console.log("  -h, --help      Show help");
+  console.log("  -v, --version   Show version");
   console.log("");
   console.log(\`Run "\${BIN} <command> --help" for command-specific help.\`);
 }
