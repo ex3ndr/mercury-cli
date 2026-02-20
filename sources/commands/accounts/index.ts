@@ -1,10 +1,10 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, formatCurrency, formatDate } from "../../output.js";
 
-const USAGE = \`mercury accounts
+const USAGE = `mercury accounts
 mercury accounts list
 mercury accounts get <account-id>
-mercury accounts --json\`;
+mercury accounts --json`;
 
 type Account = {
   id: string;
@@ -43,7 +43,7 @@ export const accountsCommand: Command = {
         await getAccount(context, accountId, format);
         return;
       default:
-        throw new Error(\`Unknown subcommand: \${subcommand}. Use 'list' or 'get'.\`);
+        throw new Error(`Unknown subcommand: ${subcommand}. Use 'list' or 'get'.`);
     }
   },
 };
@@ -78,7 +78,7 @@ async function listAccounts(context: CommandContext, format: "table" | "json"): 
 }
 
 async function getAccount(context: CommandContext, accountId: string, format: "table" | "json"): Promise<void> {
-  const account = await context.client.fetch<Account>(\`/account/\${accountId}\`);
+  const account = await context.client.fetch<Account>(`/account/${accountId}`);
 
   if (format === "json") {
     printJson(account);
@@ -87,13 +87,13 @@ async function getAccount(context: CommandContext, accountId: string, format: "t
 
   console.log("Account Details");
   console.log("───────────────");
-  console.log(\`ID:              \${account.id}\`);
-  console.log(\`Name:            \${account.name}\`);
-  console.log(\`Type:            \${account.type}\`);
-  console.log(\`Status:          \${account.status}\`);
-  console.log(\`Account Number:  \${account.accountNumber}\`);
-  console.log(\`Routing Number:  \${account.routingNumber}\`);
-  console.log(\`Available:       \${formatCurrency(account.availableBalance)}\`);
-  console.log(\`Current:         \${formatCurrency(account.currentBalance)}\`);
-  console.log(\`Created:         \${formatDate(account.createdAt)}\`);
+  console.log(`ID:              ${account.id}`);
+  console.log(`Name:            ${account.name}`);
+  console.log(`Type:            ${account.type}`);
+  console.log(`Status:          ${account.status}`);
+  console.log(`Account Number:  ${account.accountNumber}`);
+  console.log(`Routing Number:  ${account.routingNumber}`);
+  console.log(`Available:       ${formatCurrency(account.availableBalance)}`);
+  console.log(`Current:         ${formatCurrency(account.currentBalance)}`);
+  console.log(`Created:         ${formatDate(account.createdAt)}`);
 }

@@ -1,10 +1,10 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable } from "../../output.js";
 
-const USAGE = \`mercury users
+const USAGE = `mercury users
 mercury users list
 mercury users get <user-id>
-mercury users --json\`;
+mercury users --json`;
 
 type User = {
   id: string;
@@ -43,7 +43,7 @@ export const usersCommand: Command = {
           await getUser(context, subcommand, format);
           return;
         }
-        throw new Error(\`Unknown subcommand: \${subcommand}\`);
+        throw new Error(`Unknown subcommand: ${subcommand}`);
     }
   },
 };
@@ -67,7 +67,7 @@ async function listUsers(context: CommandContext, format: "table" | "json"): Pro
 }
 
 async function getUser(context: CommandContext, userId: string, format: "table" | "json"): Promise<void> {
-  const user = await context.client.fetch<User>(\`/users/\${userId}\`);
+  const user = await context.client.fetch<User>(`/users/${userId}`);
 
   if (format === "json") {
     printJson(user);
@@ -76,9 +76,9 @@ async function getUser(context: CommandContext, userId: string, format: "table" 
 
   console.log("User Details");
   console.log("────────────");
-  console.log(\`ID:         \${user.id}\`);
-  console.log(\`Name:       \${user.firstName} \${user.lastName}\`);
-  console.log(\`Email:      \${user.email}\`);
-  if (user.role) console.log(\`Role:       \${user.role}\`);
-  if (user.status) console.log(\`Status:     \${user.status}\`);
+  console.log(`ID:         ${user.id}`);
+  console.log(`Name:       ${user.firstName} ${user.lastName}`);
+  console.log(`Email:      ${user.email}`);
+  if (user.role) console.log(`Role:       ${user.role}`);
+  if (user.status) console.log(`Status:     ${user.status}`);
 }

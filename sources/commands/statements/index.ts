@@ -1,9 +1,9 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, formatDate } from "../../output.js";
 
-const USAGE = \`mercury statements <account-id>
+const USAGE = `mercury statements <account-id>
 mercury statements get <account-id> <statement-id>
-mercury statements --json\`;
+mercury statements --json`;
 
 type Statement = {
   id: string;
@@ -52,7 +52,7 @@ async function listStatements(
   format: "table" | "json"
 ): Promise<void> {
   const response = await context.client.fetch<StatementsResponse>(
-    \`/account/\${accountId}/statements\`
+    `/account/${accountId}/statements`
   );
 
   if (format === "json") {
@@ -96,7 +96,7 @@ async function getStatement(
   format: "table" | "json"
 ): Promise<void> {
   const statement = await context.client.fetch<Statement>(
-    \`/account/\${accountId}/statement/\${statementId}\`
+    `/account/${accountId}/statement/${statementId}`
   );
 
   if (format === "json") {
@@ -106,9 +106,9 @@ async function getStatement(
 
   console.log("Statement Details");
   console.log("─────────────────");
-  console.log(\`ID:         \${statement.id}\`);
-  console.log(\`Period:     \${statement.period}\`);
-  console.log(\`Start Date: \${formatDate(statement.startDate)}\`);
-  console.log(\`End Date:   \${formatDate(statement.endDate)}\`);
-  console.log(\`Created:    \${formatDate(statement.createdAt)}\`);
+  console.log(`ID:         ${statement.id}`);
+  console.log(`Period:     ${statement.period}`);
+  console.log(`Start Date: ${formatDate(statement.startDate)}`);
+  console.log(`End Date:   ${formatDate(statement.endDate)}`);
+  console.log(`Created:    ${formatDate(statement.createdAt)}`);
 }

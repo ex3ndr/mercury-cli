@@ -1,14 +1,14 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, truncate } from "../../output.js";
 
-const USAGE = \`mercury webhooks
+const USAGE = `mercury webhooks
 mercury webhooks list
 mercury webhooks get <webhook-id>
 mercury webhooks create --url <url> [--events <event1,event2>]
 mercury webhooks update <webhook-id> [--url <url>] [--events <events>] [--status <status>]
 mercury webhooks delete <webhook-id>
 mercury webhooks verify <webhook-id>
-mercury webhooks --json\`;
+mercury webhooks --json`;
 
 type Webhook = {
   id: string;
@@ -60,7 +60,7 @@ export const webhooksCommand: Command = {
         await verifyWebhook(context, verifyId);
         return;
       default:
-        throw new Error(\`Unknown subcommand: \${subcommand}\`);
+        throw new Error(`Unknown subcommand: ${subcommand}`);
     }
   },
 };
@@ -89,7 +89,7 @@ function parseCreateOptions(args: readonly string[]): CreateOptions {
       secret = args[++i];
       if (!secret) throw new Error("--secret requires a value");
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -119,7 +119,7 @@ function parseUpdateOptions(args: readonly string[]): UpdateOptions {
       options.status = args[++i];
       if (!options.status) throw new Error("--status requires a value");
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -160,7 +160,7 @@ async function getWebhook(
   webhookId: string,
   format: "table" | "json"
 ): Promise<void> {
-  const webhook = await context.client.fetch<Webhook>(\`/webhooks/\${webhookId}\`);
+  const webhook = await context.client.fetch<Webhook>(`/webhooks/${webhookId}`);
 
   if (format === "json") {
     printJson(webhook);
@@ -169,12 +169,12 @@ async function getWebhook(
 
   console.log("Webhook Details");
   console.log("───────────────");
-  console.log(\`ID:      \${webhook.id}\`);
-  console.log(\`URL:     \${webhook.url}\`);
-  console.log(\`Status:  \${webhook.status}\`);
-  console.log(\`Events:  \${webhook.events?.join(", ") ?? "all"}\`);
+  console.log(`ID:      ${webhook.id}`);
+  console.log(`URL:     ${webhook.url}`);
+  console.log(`Status:  ${webhook.status}`);
+  console.log(`Events:  ${webhook.events?.join(", ") ?? "all"}`);
   if (webhook.secret) {
-    console.log(\`Secret:  \${webhook.secret.slice(0, 8)}...\`);
+    console.log(`Secret:  ${webhook.secret.slice(0, 8)}...`);
   }
 }
 
@@ -199,9 +199,9 @@ async function createWebhook(
 
   console.log("Webhook Created");
   console.log("───────────────");
-  console.log(\`ID:     \${webhook.id}\`);
-  console.log(\`URL:    \${webhook.url}\`);
-  console.log(\`Status: \${webhook.status}\`);
+  console.log(`ID:     ${webhook.id}`);
+  console.log(`URL:    ${webhook.url}`);
+  console.log(`Status: ${webhook.status}`);
 }
 
 async function updateWebhook(
@@ -215,7 +215,7 @@ async function updateWebhook(
   if (options.events) body.events = options.events;
   if (options.status) body.status = options.status;
 
-  const webhook = await context.client.fetch<Webhook>(\`/webhooks/\${webhookId}\`, {
+  const webhook = await context.client.fetch<Webhook>(`/webhooks/${webhookId}`, {
     method: "PUT",
     body: JSON.stringify(body),
   });
@@ -227,17 +227,17 @@ async function updateWebhook(
 
   console.log("Webhook Updated");
   console.log("───────────────");
-  console.log(\`ID:     \${webhook.id}\`);
-  console.log(\`URL:    \${webhook.url}\`);
-  console.log(\`Status: \${webhook.status}\`);
+  console.log(`ID:     ${webhook.id}`);
+  console.log(`URL:    ${webhook.url}`);
+  console.log(`Status: ${webhook.status}`);
 }
 
 async function deleteWebhook(context: CommandContext, webhookId: string): Promise<void> {
-  await context.client.fetch(\`/webhooks/\${webhookId}\`, { method: "DELETE" });
-  console.log(\`Webhook \${webhookId} deleted.\`);
+  await context.client.fetch(`/webhooks/${webhookId}`, { method: "DELETE" });
+  console.log(`Webhook ${webhookId} deleted.`);
 }
 
 async function verifyWebhook(context: CommandContext, webhookId: string): Promise<void> {
-  await context.client.fetch(\`/webhooks/\${webhookId}/verify\`, { method: "POST" });
-  console.log(\`Webhook \${webhookId} verification triggered.\`);
+  await context.client.fetch(`/webhooks/${webhookId}/verify`, { method: "POST" });
+  console.log(`Webhook ${webhookId} verification triggered.`);
 }

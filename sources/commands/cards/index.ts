@@ -1,8 +1,8 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, formatDateTime } from "../../output.js";
 
-const USAGE = \`mercury cards <account-id>
-mercury cards --json\`;
+const USAGE = `mercury cards <account-id>
+mercury cards --json`;
 
 type Card = {
   cardId: string;
@@ -31,7 +31,7 @@ export const cardsCommand: Command = {
     }
 
     const response = await context.client.fetch<CardsResponse>(
-      \`/account/\${accountId}/cards\`
+      `/account/${accountId}/cards`
     );
 
     if (format === "json") {

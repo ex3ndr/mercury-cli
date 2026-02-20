@@ -8,6 +8,6 @@ export const versionCommand: Command = {
   usage: "mercury version",
   aliases: ["v"],
   run: async () => {
-    console.log(\`mercury-cli v\${VERSION}\`);
+    console.log(`mercury-cli v${VERSION}`);
   },
 };

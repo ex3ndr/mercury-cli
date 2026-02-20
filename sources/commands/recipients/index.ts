@@ -1,12 +1,12 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, truncate } from "../../output.js";
 
-const USAGE = \`mercury recipients
+const USAGE = `mercury recipients
 mercury recipients list
 mercury recipients get <recipient-id>
 mercury recipients add --name <name> --account <account-num> --routing <routing-num> [options]
 mercury recipients delete <recipient-id>
-mercury recipients --json\`;
+mercury recipients --json`;
 
 type Recipient = {
   id: string;
@@ -66,7 +66,7 @@ export const recipientsCommand: Command = {
         await deleteRecipient(context, deleteId);
         return;
       default:
-        throw new Error(\`Unknown subcommand: \${subcommand}. Use 'list', 'get', 'add', or 'delete'.\`);
+        throw new Error(`Unknown subcommand: ${subcommand}. Use 'list', 'get', 'add', or 'delete'.`);
     }
   },
 };
@@ -89,7 +89,7 @@ function parseListOptions(args: readonly string[]): ListOptions {
       if (!value) throw new Error("--offset requires a value");
       options.offset = parseInt(value, 10);
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
   return options;
@@ -159,7 +159,7 @@ function parseAddOptions(args: readonly string[]): AddOptions {
       country = args[++i];
       if (!country) throw new Error("--country requires a value");
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -192,7 +192,7 @@ async function listRecipients(
   if (options.offset) params.set("offset", String(options.offset));
 
   const query = params.toString();
-  const path = \`/recipients\${query ? \`?\${query}\` : ""}\`;
+  const path = `/recipients${query ? `?${query}` : ""}`;
   
   const response = await context.client.fetch<RecipientsResponse>(path);
 
@@ -210,7 +210,7 @@ async function listRecipients(
       width: 15,
       format: (v) => {
         const info = v as Recipient["electronicRoutingInfo"];
-        return info?.accountNumber ? \`...\${info.accountNumber.slice(-4)}\` : "-";
+        return info?.accountNumber ? `...${info.accountNumber.slice(-4)}` : "-";
       },
     },
     {
@@ -230,7 +230,7 @@ async function getRecipient(
   recipientId: string,
   format: "table" | "json"
 ): Promise<void> {
-  const recipient = await context.client.fetch<Recipient>(\`/recipient/\${recipientId}\`);
+  const recipient = await context.client.fetch<Recipient>(`/recipient/${recipientId}`);
 
   if (format === "json") {
     printJson(recipient);
@@ -239,24 +239,24 @@ async function getRecipient(
 
   console.log("Recipient Details");
   console.log("─────────────────");
-  console.log(\`ID:              \${recipient.id}\`);
-  console.log(\`Name:            \${recipient.name}\`);
+  console.log(`ID:              ${recipient.id}`);
+  console.log(`Name:            ${recipient.name}`);
   if (recipient.emails?.length) {
-    console.log(\`Emails:          \${recipient.emails.join(", ")}\`);
+    console.log(`Emails:          ${recipient.emails.join(", ")}`);
   }
   if (recipient.electronicRoutingInfo) {
     const info = recipient.electronicRoutingInfo;
-    console.log(\`Account Number:  \${info.accountNumber}\`);
-    console.log(\`Routing Number:  \${info.routingNumber}\`);
-    if (info.bankName) console.log(\`Bank Name:       \${info.bankName}\`);
-    if (info.electronicAccountType) console.log(\`Account Type:    \${info.electronicAccountType}\`);
+    console.log(`Account Number:  ${info.accountNumber}`);
+    console.log(`Routing Number:  ${info.routingNumber}`);
+    if (info.bankName) console.log(`Bank Name:       ${info.bankName}`);
+    if (info.electronicAccountType) console.log(`Account Type:    ${info.electronicAccountType}`);
   }
   if (recipient.address) {
     const addr = recipient.address;
-    console.log(\`Address:         \${addr.address1}\`);
-    if (addr.address2) console.log(\`                 \${addr.address2}\`);
-    console.log(\`                 \${addr.city}, \${addr.region} \${addr.postalCode}\`);
-    console.log(\`                 \${addr.country}\`);
+    console.log(`Address:         ${addr.address1}`);
+    if (addr.address2) console.log(`                 ${addr.address2}`);
+    console.log(`                 ${addr.city}, ${addr.region} ${addr.postalCode}`);
+    console.log(`                 ${addr.country}`);
   }
 }
 
@@ -301,14 +301,14 @@ async function addRecipient(
 
   console.log("Recipient Created");
   console.log("─────────────────");
-  console.log(\`ID:   \${recipient.id}\`);
-  console.log(\`Name: \${recipient.name}\`);
+  console.log(`ID:   ${recipient.id}`);
+  console.log(`Name: ${recipient.name}`);
 }
 
 async function deleteRecipient(context: CommandContext, recipientId: string): Promise<void> {
-  await context.client.fetch(\`/recipient/\${recipientId}\`, {
+  await context.client.fetch(`/recipient/${recipientId}`, {
     method: "DELETE",
   });
 
-  console.log(\`Recipient \${recipientId} deleted.\`);
+  console.log(`Recipient ${recipientId} deleted.`);
 }

@@ -1,8 +1,8 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, formatCurrency } from "../../output.js";
 
-const USAGE = \`mercury transfer --from <account-id> --to <account-id> --amount <cents> --idempotency-key <key>
-mercury transfer --json\`;
+const USAGE = `mercury transfer --from <account-id> --to <account-id> --amount <cents> --idempotency-key <key>
+mercury transfer --json`;
 
 type TransferResponse = {
   id: string;
@@ -49,11 +49,11 @@ export const transferCommand: Command = {
 
     console.log("Transfer Initiated");
     console.log("──────────────────");
-    console.log(\`ID:     \${transfer.id}\`);
-    console.log(\`From:   \${transfer.fromAccountId}\`);
-    console.log(\`To:     \${transfer.toAccountId}\`);
-    console.log(\`Amount: \${formatCurrency(transfer.amount)}\`);
-    console.log(\`Status: \${transfer.status}\`);
+    console.log(`ID:     ${transfer.id}`);
+    console.log(`From:   ${transfer.fromAccountId}`);
+    console.log(`To:     ${transfer.toAccountId}`);
+    console.log(`Amount: ${formatCurrency(transfer.amount)}`);
+    console.log(`Status: ${transfer.status}`);
   },
 };
 
@@ -86,7 +86,7 @@ function parseTransferOptions(args: readonly string[]): TransferOptions {
       note = args[++i];
       if (!note) throw new Error("--note requires a value");
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
