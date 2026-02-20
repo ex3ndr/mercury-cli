@@ -17,7 +17,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "mkdir -p dist && bun build ./sources/main.ts --outfile ./dist/main.js --target node",
+    "build": "mkdir -p dist && bun build ./sources/main.ts --outfile ./dist/main.js",
     "build:binary": "bun build ./sources/main.ts --compile --outfile ./dist/mercury",
     "dev": "bun ./sources/main.ts",
     "typecheck": "tsc --noEmit"
