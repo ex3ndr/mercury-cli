@@ -1,10 +1,10 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, formatDateTime, truncate } from "../../output.js";
 
-const USAGE = \`mercury events
+const USAGE = `mercury events
 mercury events list [--limit N] [--type <type>]
 mercury events get <event-id>
-mercury events --json\`;
+mercury events --json`;
 
 type ApiEvent = {
   id: string;
@@ -44,7 +44,7 @@ export const eventsCommand: Command = {
           await getEvent(context, subcommand, format);
           return;
         }
-        throw new Error(\`Unknown subcommand: \${subcommand}\`);
+        throw new Error(`Unknown subcommand: ${subcommand}`);
     }
   },
 };
@@ -73,7 +73,7 @@ function parseListOptions(args: readonly string[]): ListOptions {
       if (!value) throw new Error("--type requires a value");
       options.type = value;
     } else if (arg?.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -91,7 +91,7 @@ async function listEvents(
   if (options.type) params.set("type", options.type);
 
   const query = params.toString();
-  const path = \`/events\${query ? \`?\${query}\` : ""}\`;
+  const path = `/events${query ? `?${query}` : ""}`;
 
   const response = await context.client.fetch<EventsResponse>(path);
 
@@ -124,7 +124,7 @@ async function getEvent(
   eventId: string,
   format: "table" | "json"
 ): Promise<void> {
-  const event = await context.client.fetch<ApiEvent>(\`/event/\${eventId}\`);
+  const event = await context.client.fetch<ApiEvent>(`/event/${eventId}`);
 
   if (format === "json") {
     printJson(event);
@@ -133,12 +133,12 @@ async function getEvent(
 
   console.log("Event Details");
   console.log("─────────────");
-  console.log(\`ID:            \${event.id}\`);
-  console.log(\`Resource Type: \${event.resourceType}\`);
-  console.log(\`Resource ID:   \${event.resourceId}\`);
-  console.log(\`Operation:     \${event.operationType}\`);
-  console.log(\`Occurred At:   \${formatDateTime(event.occurredAt)}\`);
+  console.log(`ID:            ${event.id}`);
+  console.log(`Resource Type: ${event.resourceType}`);
+  console.log(`Resource ID:   ${event.resourceId}`);
+  console.log(`Operation:     ${event.operationType}`);
+  console.log(`Occurred At:   ${formatDateTime(event.occurredAt)}`);
   if (event.changedPaths?.length) {
-    console.log(\`Changed Paths: \${event.changedPaths.join(", ")}\`);
+    console.log(`Changed Paths: ${event.changedPaths.join(", ")}`);
   }
 }

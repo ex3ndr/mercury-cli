@@ -14,14 +14,14 @@ export const statusCommand: Command = {
 
     console.log("Mercury CLI Status");
     console.log("──────────────────");
-    console.log(\`Authenticated: \${token ? "Yes" : "No"}\`);
+    console.log(`Authenticated: ${token ? "Yes" : "No"}`);
     if (token) {
       const masked = token.slice(0, 10) + "..." + token.slice(-4);
-      console.log(\`Token: \${masked}\`);
+      console.log(`Token: ${masked}`);
     }
-    console.log(\`API Base URL: \${baseUrl}\`);
+    console.log(`API Base URL: ${baseUrl}`);
     if (config.defaultAccountId) {
-      console.log(\`Default Account: \${config.defaultAccountId}\`);
+      console.log(`Default Account: ${config.defaultAccountId}`);
     }
   },
 };

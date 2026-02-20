@@ -1,13 +1,13 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable, formatCurrency, formatDateTime, truncate } from "../../output.js";
 
-const USAGE = \`mercury transactions <account-id>
+const USAGE = `mercury transactions <account-id>
 mercury transactions <account-id> --limit 50
 mercury transactions <account-id> --status pending
 mercury transactions <account-id> --start 2024-01-01 --end 2024-12-31
 mercury transactions get <account-id> <transaction-id>
 mercury transactions send <account-id> --recipient <id> --amount <cents> --idempotency-key <key>
-mercury transactions --json\`;
+mercury transactions --json`;
 
 type Transaction = {
   id: string;
@@ -132,7 +132,7 @@ function parseListOptions(args: readonly string[]): ListOptions {
       continue;
     }
     if (arg.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -194,7 +194,7 @@ function parseSendOptions(args: readonly string[]): SendOptions {
       continue;
     }
     if (arg.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
   }
 
@@ -220,7 +220,7 @@ async function listTransactions(
   if (options.search) params.set("search", options.search);
 
   const query = params.toString();
-  const path = \`/account/\${accountId}/transactions\${query ? \`?\${query}\` : ""}\`;
+  const path = `/account/${accountId}/transactions${query ? `?${query}` : ""}`;
   
   const response = await context.client.fetch<TransactionsResponse>(path);
 
@@ -229,7 +229,7 @@ async function listTransactions(
     return;
   }
 
-  console.log(\`Transactions (total: \${response.total})\`);
+  console.log(`Transactions (total: ${response.total})`);
   console.log("");
 
   printTable(response.transactions, [
@@ -264,7 +264,7 @@ async function getTransaction(
   format: "table" | "json"
 ): Promise<void> {
   const tx = await context.client.fetch<Transaction>(
-    \`/account/\${accountId}/transaction/\${txId}\`
+    `/account/${accountId}/transaction/${txId}`
   );
 
   if (format === "json") {
@@ -274,18 +274,18 @@ async function getTransaction(
 
   console.log("Transaction Details");
   console.log("───────────────────");
-  console.log(\`ID:                \${tx.id}\`);
-  console.log(\`Type:              \${tx.kind}\`);
-  console.log(\`Status:            \${tx.status}\`);
-  console.log(\`Amount:            \${formatCurrency(tx.amount)}\`);
-  console.log(\`Counterparty:      \${tx.counterpartyName ?? "-"}\`);
-  console.log(\`Counterparty ID:   \${tx.counterpartyId ?? "-"}\`);
-  console.log(\`Description:       \${tx.description ?? "-"}\`);
-  console.log(\`Note:              \${tx.note ?? "-"}\`);
-  console.log(\`External Memo:     \${tx.externalMemo ?? "-"}\`);
-  console.log(\`Created:           \${formatDateTime(tx.createdAt)}\`);
-  console.log(\`Posted:            \${formatDateTime(tx.postedAt)}\`);
-  console.log(\`Est. Delivery:     \${formatDateTime(tx.estimatedDeliveryDate)}\`);
+  console.log(`ID:                ${tx.id}`);
+  console.log(`Type:              ${tx.kind}`);
+  console.log(`Status:            ${tx.status}`);
+  console.log(`Amount:            ${formatCurrency(tx.amount)}`);
+  console.log(`Counterparty:      ${tx.counterpartyName ?? "-"}`);
+  console.log(`Counterparty ID:   ${tx.counterpartyId ?? "-"}`);
+  console.log(`Description:       ${tx.description ?? "-"}`);
+  console.log(`Note:              ${tx.note ?? "-"}`);
+  console.log(`External Memo:     ${tx.externalMemo ?? "-"}`);
+  console.log(`Created:           ${formatDateTime(tx.createdAt)}`);
+  console.log(`Posted:            ${formatDateTime(tx.postedAt)}`);
+  console.log(`Est. Delivery:     ${formatDateTime(tx.estimatedDeliveryDate)}`);
 }
 
 async function sendTransaction(
@@ -302,8 +302,8 @@ async function sendTransaction(
   if (options.note) body.note = options.note;
 
   const endpoint = options.method === "wire" 
-    ? \`/account/\${accountId}/transactions/external-domestic-wire\`
-    : \`/account/\${accountId}/transactions/external\`;
+    ? `/account/${accountId}/transactions/external-domestic-wire`
+    : `/account/${accountId}/transactions/external`;
 
   const tx = await context.client.fetch<Transaction>(endpoint, {
     method: "POST",
@@ -317,8 +317,8 @@ async function sendTransaction(
 
   console.log("Transaction Created");
   console.log("───────────────────");
-  console.log(\`ID:        \${tx.id}\`);
-  console.log(\`Status:    \${tx.status}\`);
-  console.log(\`Amount:    \${formatCurrency(tx.amount)}\`);
-  console.log(\`Method:    \${options.method?.toUpperCase() ?? "ACH"}\`);
+  console.log(`ID:        ${tx.id}`);
+  console.log(`Status:    ${tx.status}`);
+  console.log(`Amount:    ${formatCurrency(tx.amount)}`);
+  console.log(`Method:    ${options.method?.toUpperCase() ?? "ACH"}`);
 }

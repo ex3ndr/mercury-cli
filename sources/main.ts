@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import type { Command, CommandContext } from "./commands/types.js";
 import { createMercuryClient } from "./client.js";
 import { loginCommand } from "./commands/login/index.js";
@@ -52,15 +52,15 @@ function isHelpFlag(value: string): boolean {
 }
 
 function printHelp(): void {
-  console.log(\`\${BIN} <command> [options]\`);
+  console.log(`${BIN} <command> [options]`);
   console.log("");
   console.log("Commands:");
 
   for (const command of commands) {
     const aliasText = command.aliases && command.aliases.length > 0
-      ? \` (\${command.aliases.join(", ")})\`
+      ? ` (${command.aliases.join(", ")})`
       : "";
-    console.log(\`  \${command.name.padEnd(16)}\${command.description}\${aliasText}\`);
+    console.log(`  ${command.name.padEnd(16)}${command.description}${aliasText}`);
   }
 
   console.log("");
@@ -69,7 +69,7 @@ function printHelp(): void {
   console.log("  -h, --help      Show help");
   console.log("  -v, --version   Show version");
   console.log("");
-  console.log(\`Run "\${BIN} <command> --help" for command-specific help.\`);
+  console.log(`Run "${BIN} <command> --help" for command-specific help.`);
 }
 
 function printCommandHelp(command: Command): void {
@@ -96,7 +96,7 @@ async function runCli(): Promise<void> {
   const command = commandIndex.get(commandName);
 
   if (!command) {
-    console.error(\`Unknown command: \${commandName}\`);
+    console.error(`Unknown command: ${commandName}`);
     printHelp();
     process.exitCode = 1;
     return;
@@ -113,7 +113,7 @@ async function runCli(): Promise<void> {
     await command.run(commandArgs, context);
   } catch (error) {
     if (error instanceof Error) {
-      console.error(\`Error: \${error.message}\`);
+      console.error(`Error: ${error.message}`);
     } else {
       console.error("Unexpected error");
     }

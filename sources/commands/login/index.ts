@@ -1,8 +1,8 @@
 import type { Command } from "../types.js";
 import { saveToken, loadToken } from "../../config.js";
 
-const USAGE = \`mercury login --token <API_TOKEN>
-mercury login --token-stdin\`;
+const USAGE = `mercury login --token <API_TOKEN>
+mercury login --token-stdin`;
 
 type LoginOptions = {
   token?: string;
@@ -71,14 +71,14 @@ function parseLoginArgs(args: readonly string[]): LoginOptions {
     }
 
     if (arg.startsWith("-")) {
-      throw new Error(\`Unknown option: \${arg}\`);
+      throw new Error(`Unknown option: ${arg}`);
     }
 
     positionals.push(arg);
   }
 
   if (positionals.length > 0) {
-    throw new Error(\`Unexpected arguments: \${positionals.join(" ")}\`);
+    throw new Error(`Unexpected arguments: ${positionals.join(" ")}`);
   }
 
   return { token, tokenStdin };

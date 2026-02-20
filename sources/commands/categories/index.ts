@@ -1,8 +1,8 @@
 import type { Command, CommandContext } from "../types.js";
 import { parseOutputFlag, printJson, printTable } from "../../output.js";
 
-const USAGE = \`mercury categories
-mercury categories --json\`;
+const USAGE = `mercury categories
+mercury categories --json`;
 
 type Category = {
   id: string;
