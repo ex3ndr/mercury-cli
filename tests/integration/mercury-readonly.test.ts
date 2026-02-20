@@ -23,9 +23,9 @@ async function mercuryGet(path: string, token: string) {
 describe("mercury integration (read-only)", () => {
   const token = process.env.MERCURY_TOKEN;
 
-  it.skipIf(\!token)("lists accounts", async () => {
+  it.skipIf(!token)("lists accounts", async () => {
     try {
-      const data = await mercuryGet("/accounts", token\!);
+      const data = await mercuryGet("/accounts", token!);
       expect(data).toBeTruthy();
       // shape is API-defined; just sanity check array-like container
       expect(Array.isArray(data.accounts) || Array.isArray(data)).toBe(true);
@@ -34,27 +34,27 @@ describe("mercury integration (read-only)", () => {
     }
   });
 
-  it.skipIf(\!token)("lists users", async () => {
+  it.skipIf(!token)("lists users", async () => {
     try {
-      const data = await mercuryGet("/users", token\!);
+      const data = await mercuryGet("/users", token!);
       expect(data).toBeTruthy();
     } catch (e) {
       throw new Error(redactSecrets(e, [token]));
     }
   });
 
-  it.skipIf(\!token)("lists categories", async () => {
+  it.skipIf(!token)("lists categories", async () => {
     try {
-      const data = await mercuryGet("/categories", token\!);
+      const data = await mercuryGet("/categories", token!);
       expect(data).toBeTruthy();
     } catch (e) {
       throw new Error(redactSecrets(e, [token]));
     }
   });
 
-  it.skipIf(\!token)("gets organization", async () => {
+  it.skipIf(!token)("gets organization", async () => {
     try {
-      const data = await mercuryGet("/organization", token\!);
+      const data = await mercuryGet("/organization", token!);
       expect(data).toBeTruthy();
     } catch (e) {
       throw new Error(redactSecrets(e, [token]));
