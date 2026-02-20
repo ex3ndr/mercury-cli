@@ -14,7 +14,7 @@ function authHeaders(token: string) {
 async function mercuryGet(path: string, token: string) {
   const res = await fetch(`${BASE}${path}`, { headers: authHeaders(token) });
   const text = await res.text();
-  if (\!res.ok) {
+  if (!res.ok) {
     throw new Error(`Mercury ${path} failed: ${res.status} ${res.statusText}; body=${text}`);
   }
   return text ? JSON.parse(text) : null;
