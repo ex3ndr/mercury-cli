@@ -11,34 +11,14 @@ A powerful CLI for the [Mercury Banking API](https://docs.mercury.com/reference)
 - 🏦 **Full Mercury API coverage** — accounts, transactions, transfers, recipients, webhooks, and more
 - 📊 **Multiple output formats** — human-readable tables or JSON for scripting
 - 🔐 **Secure token storage** — credentials stored safely in `~/.mercury/`
-- ⚡ **Fast** — built with Bun for native performance
+- ⚡ **Fast** — lightweight with minimal dependencies
 - 🤖 **Scriptable** — no interactive prompts, perfect for CI/CD and automation
 
 ## Installation
 
-### From source
-
 ```bash
-# Clone the repository
-git clone https://github.com/ex3ndr-bot/mercury-cli.git
-cd mercury-cli
-
-# Install dependencies
-bun install
-
-# Run directly
-bun run sources/main.ts --help
-
-# Or build native binary
-bun run build
-./dist/mercury --help
+npm install -g mercury-cli
 ```
-
-### Requirements
-
-- [Bun](https://bun.sh/) v1.0 or later
-
----
 
 ## Quick Start
 
