@@ -19,6 +19,30 @@ export class MercuryApiError extends Error {
   }
 }
 
+/**
+ * Get proxy agent if HTTP_PROXY or HTTPS_PROXY is set.
+ * Uses undici's ProxyAgent which is included with Node 18+.
+ */
+async function getProxyDispatcher(): Promise<import("undici").Dispatcher | undefined> {
+  const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || 
+                   process.env.https_proxy || process.env.http_proxy;
+  
+  if (!proxyUrl) {
+    return undefined;
+  }
+
+  try {
+    const { ProxyAgent } = await import("undici");
+    return new ProxyAgent(proxyUrl);
+  } catch {
+    // undici not available, fall back to no proxy
+    return undefined;
+  }
+}
+
+// Cache the dispatcher promise
+let dispatcherPromise: Promise<import("undici").Dispatcher | undefined> | null = null;
+
 export function createMercuryClient(): MercuryClient {
   const token = loadToken();
   const baseUrl = getApiBaseUrl();
@@ -32,8 +56,14 @@ export function createMercuryClient(): MercuryClient {
       }
 
       const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
-      
-      const response = await fetch(url, {
+
+      // Get proxy dispatcher (cached)
+      if (!dispatcherPromise) {
+        dispatcherPromise = getProxyDispatcher();
+      }
+      const dispatcher = await dispatcherPromise;
+
+      const fetchOptions: RequestInit & { dispatcher?: import("undici").Dispatcher } = {
         ...init,
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -41,7 +71,14 @@ export function createMercuryClient(): MercuryClient {
           "Accept": "application/json",
           ...init?.headers,
         },
-      });
+      };
+
+      // Add dispatcher for proxy support if available
+      if (dispatcher) {
+        fetchOptions.dispatcher = dispatcher;
+      }
+
+      const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
         let body: ApiError;
