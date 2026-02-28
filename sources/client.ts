@@ -22,6 +22,7 @@ export class MercuryApiError extends Error {
 /**
  * Get proxy agent if HTTP_PROXY or HTTPS_PROXY is set.
  * Uses undici's ProxyAgent which is included with Node 18+.
+ * Validates the proxy URL and falls back to direct connection on error.
  */
 async function getProxyDispatcher(): Promise<import("undici").Dispatcher | undefined> {
   const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || 
@@ -32,10 +33,14 @@ async function getProxyDispatcher(): Promise<import("undici").Dispatcher | undef
   }
 
   try {
+    // Validate URL format before passing to ProxyAgent
+    new URL(proxyUrl);
     const { ProxyAgent } = await import("undici");
     return new ProxyAgent(proxyUrl);
-  } catch {
-    // undici not available, fall back to no proxy
+  } catch (err) {
+    // Invalid URL or undici not available - fall back to direct connection
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Warning: Invalid proxy URL "${proxyUrl}": ${message}. Using direct connection.`);
     return undefined;
   }
 }
